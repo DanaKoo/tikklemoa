@@ -154,6 +154,42 @@
       line-height: 1.2;
       font-weight: 900;
     }
+    .asset-summary {
+      margin: 4px 0 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #eef3ff;
+      color: #2d3f68;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+    .asset-summary:empty { display: none; }
+    .asset-step { display: none; }
+    .asset-step.active { display: block; }
+    .asset-step .question { margin-top: 8px; }
+    .step-hint {
+      margin-top: -20px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #7080a3;
+      font-weight: 600;
+    }
+    .input-korean {
+      margin-top: -26px;
+      margin-bottom: 20px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 700;
+      min-height: 20px;
+    }
+    .tiny-hint {
+      margin-top: -22px;
+      margin-bottom: 18px;
+      font-size: 12px;
+      color: #7783a2;
+      font-weight: 600;
+    }
     .question .optional {
       font-size: 16px;
       font-weight: 700;
@@ -227,6 +263,32 @@
     .fixed-bottom.enabled {
       background: var(--blue);
     }
+    .fixed-bottom-row {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(390px, calc(100vw - 32px));
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 10px;
+    }
+    .fixed-bottom-row .fixed-bottom {
+      position: static;
+      left: auto;
+      bottom: auto;
+      transform: none;
+      width: 100%;
+    }
+    .fixed-back {
+      border: none;
+      border-radius: 14px;
+      background: #e8eaf0;
+      color: #495168;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
     .summary-card {
       background: linear-gradient(135deg, #8b69ff, #6e73ff);
       border-radius: 18px;
@@ -250,6 +312,53 @@
       font-size: 16px;
       font-weight: 700;
       opacity: 0.95;
+    }
+    .horizon-tabs {
+      margin: 14px 0 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .tab-btn {
+      border: 1px solid #dbe1ef;
+      background: #fff;
+      color: #5e6782;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #2f66e3;
+      border-color: #2f66e3;
+      color: #fff;
+    }
+    .one-line-summary {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.45;
+      color: #eef2ff;
+      font-weight: 700;
+    }
+    .chart-legend {
+      margin: 8px 8px 0;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #68708a;
+      font-weight: 700;
+    }
+    .chart-legend .item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-legend .line {
+      width: 12px;
+      height: 3px;
+      border-radius: 999px;
     }
     .section-title {
       margin: 18px 0 12px;
@@ -411,31 +520,74 @@
     </section>
 
     <section class="screen" id="screen-assets">
-      <div class="question">현재 보유 중인 현금은 얼마인가요?</div>
-      <div class="input-line-wrap">
-        <input class="line-input amount" id="cashInput" inputmode="numeric" placeholder="" />
-        <span class="suffix">원</span>
+      <div id="assetSummary" class="asset-summary"></div>
+
+      <div class="asset-step active" data-step="cash">
+        <div class="question">현재 보유 중인 현금은 얼마인가요?</div>
+        <div class="input-line-wrap">
+          <input class="line-input amount" id="cashInput" inputmode="numeric" placeholder="" />
+          <span class="suffix">원</span>
+        </div>
+        <div class="input-korean" id="cashKorean"></div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
       </div>
 
-      <div class="question">매달 얼마나 저축하고 있나요?</div>
-      <div class="input-line-wrap">
-        <input class="line-input amount" id="saveInput" inputmode="numeric" placeholder="" />
-        <span class="suffix">원</span>
+      <div class="asset-step" data-step="save">
+        <div class="question">매달 얼마나 저축하고 있나요?</div>
+        <div class="input-line-wrap">
+          <input class="line-input amount" id="saveInput" inputmode="numeric" placeholder="" />
+          <span class="suffix">원</span>
+        </div>
+        <div class="input-korean" id="saveKorean"></div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
       </div>
 
-      <div class="question">현금 외에도 주식, 펀드 등의<br />자산이 있으신가요?</div>
-      <div class="choice-row">
-        <button class="choice-btn" data-group="hasInvest" data-value="yes">네, 있어요.</button>
-        <button class="choice-btn" data-group="hasInvest" data-value="no">아니요, 없어요.</button>
+      <div class="asset-step" data-step="saveRate">
+        <div class="question">적금/예금 연 이자율이 몇 %인가요?</div>
+        <div class="input-line-wrap">
+          <input class="line-input decimal" id="saveRateInput" inputmode="decimal" value="3.5" />
+          <span class="suffix">%</span>
+        </div>
+        <div class="tiny-hint">입력하지 않으면 기본값 3.5%를 적용합니다.</div>
       </div>
 
-      <div id="investFields" class="hidden">
+      <div class="asset-step" data-step="hasInvest">
+        <div class="question">현금 외에도 주식, 펀드 등의<br />자산이 있으신가요?</div>
+        <div class="choice-row">
+          <button class="choice-btn" data-group="hasInvest" data-value="yes">네, 있어요.</button>
+          <button class="choice-btn" data-group="hasInvest" data-value="no">아니요, 없어요.</button>
+        </div>
+      </div>
+
+      <div id="investFields" class="asset-step" data-step="investAmount">
         <div class="question">보유 중인 투자 자산 총합은 얼마인가요?</div>
         <div class="input-line-wrap">
           <input class="line-input amount" id="investInput" inputmode="numeric" />
           <span class="suffix">원</span>
         </div>
+        <div class="input-korean" id="investKorean"></div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
+      </div>
 
+      <div class="asset-step" data-step="hasMonthlyInvest">
+        <div class="question">매달 추가로 투자하는 금액이 있나요?</div>
+        <div class="choice-row">
+          <button class="choice-btn" data-group="hasMonthlyInvest" data-value="yes">네, 있어요.</button>
+          <button class="choice-btn" data-group="hasMonthlyInvest" data-value="no">아니요, 없어요.</button>
+        </div>
+      </div>
+
+      <div class="asset-step" data-step="monthlyInvestAmount">
+        <div class="question">매달 투자하는 금액은 얼마인가요?</div>
+        <div class="input-line-wrap">
+          <input class="line-input amount" id="monthlyInvestInput" inputmode="numeric" />
+          <span class="suffix">원</span>
+        </div>
+        <div class="input-korean" id="monthlyInvestKorean"></div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
+      </div>
+
+      <div class="asset-step" data-step="return">
         <div class="question">예상 연 수익률은 몇 %인가요?<span class="optional">(선택)</span></div>
         <div class="input-line-wrap">
           <input class="line-input decimal" id="returnInput" inputmode="decimal" />
@@ -443,17 +595,24 @@
         </div>
       </div>
 
-      <button class="fixed-bottom" id="assetsNextBtn" disabled>입력 완료! 다음 단계로 넘어가기</button>
+      <div class="fixed-bottom-row">
+        <button class="fixed-back" id="assetsBackBtn">이전</button>
+        <button class="fixed-bottom" id="assetsNextBtn" disabled>다음</button>
+      </div>
     </section>
 
     <section class="screen" id="screen-loan">
-      <div class="question">보유하고 있는 대출이 있으신가요?</div>
-      <div class="choice-row">
-        <button class="choice-btn" data-group="hasLoan" data-value="yes">네, 있어요.</button>
-        <button class="choice-btn" data-group="hasLoan" data-value="no">아니요, 없어요.</button>
+      <div id="loanSummary" class="asset-summary"></div>
+
+      <div class="asset-step active" data-loan-step="hasLoan">
+        <div class="question">보유하고 있는 대출이 있으신가요?</div>
+        <div class="choice-row">
+          <button class="choice-btn" data-group="hasLoan" data-value="yes">네, 있어요.</button>
+          <button class="choice-btn" data-group="hasLoan" data-value="no">아니요, 없어요.</button>
+        </div>
       </div>
 
-      <div id="loanFields" class="hidden">
+      <div id="loanFields" class="asset-step" data-loan-step="loanType">
         <div class="question">대출 종류는 무엇인가요?</div>
         <div class="choice-row three">
           <button class="choice-btn" data-group="loanType" data-value="주택담보대출">주택담보대출</button>
@@ -466,19 +625,29 @@
           <input class="line-input amount" id="loanAmountInput" inputmode="numeric" />
           <span class="suffix">원</span>
         </div>
+        <div class="input-korean" id="loanAmountKorean"></div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
+      </div>
 
+      <div class="asset-step" data-loan-step="loanYears">
         <div class="question">대출 기간은 얼마나 되나요?</div>
         <div class="input-line-wrap">
           <input class="line-input decimal" id="loanYearsInput" inputmode="numeric" />
           <span class="suffix">년</span>
         </div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
+      </div>
 
+      <div class="asset-step" data-loan-step="loanRate">
         <div class="question">대출 금리는 몇 %인가요?</div>
         <div class="input-line-wrap">
           <input class="line-input decimal" id="loanRateInput" inputmode="decimal" />
           <span class="suffix">%</span>
         </div>
+        <div class="step-hint">숫자 입력 후 엔터 또는 다음 버튼</div>
+      </div>
 
+      <div class="asset-step" data-loan-step="repayment">
         <div class="question">상환 방식은 무엇인가요?</div>
         <div class="choice-row three">
           <button class="choice-btn" data-group="repayment" data-value="원리금균등">원리금균등</button>
@@ -487,24 +656,41 @@
         </div>
       </div>
 
-      <button class="fixed-bottom" id="loanNextBtn" disabled>지금 결과 보러 가기</button>
+      <div class="fixed-bottom-row">
+        <button class="fixed-back" id="loanBackBtn">이전</button>
+        <button class="fixed-bottom" id="loanNextBtn" disabled>다음</button>
+      </div>
     </section>
 
     <section class="screen" id="screen-result">
+      <div class="horizon-tabs">
+        <button class="tab-btn active" data-years="1">1년</button>
+        <button class="tab-btn" data-years="3">3년</button>
+        <button class="tab-btn" data-years="10">10년</button>
+      </div>
       <div class="summary-card">
-        <div class="small">나의 1년 뒤 자산은?</div>
+        <div class="small" id="summaryHorizon">내 자산이 이만큼 늘었어요</div>
         <div class="big" id="summaryTotal">0원 예상</div>
         <div class="gain" id="summaryGain">(+0원 증가 예상)</div>
+        <div class="one-line-summary" id="summarySentence"></div>
       </div>
 
-      <div class="section-title">내 자산이 이렇게 증가해요!</div>
+      <div class="section-title">내 자산이 이만큼 늘었어요</div>
 
       <div class="chart-wrap">
-        <svg id="lineChart" width="100%" height="220" viewBox="0 0 380 220" preserveAspectRatio="none"></svg>
-        <div id="chartTooltip" class="chart-tooltip"></div>
-        <div class="chart-label-row" id="chartMonths"></div>
+        <svg id="assetLineChart" width="100%" height="220" viewBox="0 0 380 220" preserveAspectRatio="none"></svg>
+        <div id="assetChartTooltip" class="chart-tooltip"></div>
+        <div class="chart-label-row" id="assetChartMonths"></div>
       </div>
 
+      <div class="section-title">대출이 이만큼 줄었어요</div>
+      <div class="chart-wrap">
+        <svg id="loanLineChart" width="100%" height="220" viewBox="0 0 380 220" preserveAspectRatio="none"></svg>
+        <div id="loanChartTooltip" class="chart-tooltip"></div>
+        <div class="chart-label-row" id="loanChartMonths"></div>
+      </div>
+
+      <div class="section-title">지금부터 1년 월별 흐름</div>
       <div id="monthCards"></div>
 
       <div class="result-actions">
@@ -518,8 +704,11 @@
     const state = {
       cash: 0,
       monthlySave: 0,
+      saveRate: 3.5,
       hasInvest: null,
       investAmount: 0,
+      hasMonthlyInvest: null,
+      monthlyInvestAmount: 0,
       annualReturn: 0,
       hasLoan: null,
       loanType: "",
@@ -539,33 +728,239 @@
 
     const cashInput = document.getElementById("cashInput");
     const saveInput = document.getElementById("saveInput");
+    const saveRateInput = document.getElementById("saveRateInput");
     const investInput = document.getElementById("investInput");
+    const monthlyInvestInput = document.getElementById("monthlyInvestInput");
     const returnInput = document.getElementById("returnInput");
+    const cashKorean = document.getElementById("cashKorean");
+    const saveKorean = document.getElementById("saveKorean");
+    const investKorean = document.getElementById("investKorean");
+    const monthlyInvestKorean = document.getElementById("monthlyInvestKorean");
+    const assetSummary = document.getElementById("assetSummary");
     const investFields = document.getElementById("investFields");
+    const assetsBackBtn = document.getElementById("assetsBackBtn");
     const assetsNextBtn = document.getElementById("assetsNextBtn");
+    const assetSteps = Array.from(document.querySelectorAll("#screen-assets .asset-step"));
+    let assetStepIndex = 0;
 
     const loanFields = document.getElementById("loanFields");
     const loanAmountInput = document.getElementById("loanAmountInput");
+    const loanAmountKorean = document.getElementById("loanAmountKorean");
     const loanYearsInput = document.getElementById("loanYearsInput");
     const loanRateInput = document.getElementById("loanRateInput");
+    const loanSummary = document.getElementById("loanSummary");
+    const loanBackBtn = document.getElementById("loanBackBtn");
     const loanNextBtn = document.getElementById("loanNextBtn");
+    const loanSteps = Array.from(document.querySelectorAll("#screen-loan [data-loan-step]"));
+    let loanStepIndex = 0;
 
     const summaryTotal = document.getElementById("summaryTotal");
+    const summaryHorizon = document.getElementById("summaryHorizon");
     const summaryGain = document.getElementById("summaryGain");
-    const lineChart = document.getElementById("lineChart");
-    const chartTooltip = document.getElementById("chartTooltip");
-    const chartMonths = document.getElementById("chartMonths");
+    const summarySentence = document.getElementById("summarySentence");
+    const assetLineChart = document.getElementById("assetLineChart");
+    const assetChartTooltip = document.getElementById("assetChartTooltip");
+    const assetChartMonths = document.getElementById("assetChartMonths");
+    const loanLineChart = document.getElementById("loanLineChart");
+    const loanChartTooltip = document.getElementById("loanChartTooltip");
+    const loanChartMonths = document.getElementById("loanChartMonths");
     const monthCards = document.getElementById("monthCards");
+    const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
 
     const money = (n) => `${Math.round(n).toLocaleString("ko-KR")}원`;
+    let silentNav = false;
+    let activeHorizonYears = 1;
 
     function parseMoney(raw) {
       return Number(String(raw || "").replace(/[^\d]/g, "")) || 0;
     }
 
     function formatMoneyInput(el) {
-      const value = parseMoney(el.value);
-      el.value = value ? value.toLocaleString("ko-KR") : "";
+      const digits = String(el.value || "").replace(/[^\d]/g, "");
+      if (digits === "") {
+        el.value = "";
+        return;
+      }
+      const value = Number(digits);
+      el.value = value.toLocaleString("ko-KR");
+    }
+
+    function toKoreanAmount(n) {
+      const value = Math.round(Number(n) || 0);
+      if (!value) return "";
+      const eok = Math.floor(value / 100000000);
+      const man = Math.floor((value % 100000000) / 10000);
+      const won = value % 10000;
+      const parts = [];
+      if (eok) parts.push(`${eok.toLocaleString("ko-KR")}억`);
+      if (man) parts.push(`${man.toLocaleString("ko-KR")}만원`);
+      if (!eok && !man && won) parts.push(`${won.toLocaleString("ko-KR")}원`);
+      return parts.join(" ");
+    }
+
+    function renderAssetSummary() {
+      const lines = [];
+      const saveRateStepIdx = assetSteps.findIndex((step) => step.dataset.step === "saveRate");
+      const saveRateVisible = assetStepIndex >= saveRateStepIdx;
+      if (state.cash > 0) lines.push(`현금: ${toKoreanAmount(state.cash)}`);
+      if (state.monthlySave > 0) lines.push(`월 저축: ${toKoreanAmount(state.monthlySave)}`);
+      if (saveRateVisible) lines.push(`저축 이자율: ${(Number(state.saveRate) || 3.5)}%`);
+      if (state.hasInvest === "yes") lines.push("투자 여부: 있음");
+      if (state.hasInvest === "no") lines.push("투자 여부: 없음");
+      if (state.investAmount > 0) lines.push(`투자 자산: ${toKoreanAmount(state.investAmount)}`);
+      if (state.hasMonthlyInvest === "yes") lines.push("월 추가 투자: 있음");
+      if (state.hasMonthlyInvest === "no") lines.push("월 추가 투자: 없음");
+      if (state.monthlyInvestAmount > 0) lines.push(`월 투자액: ${toKoreanAmount(state.monthlyInvestAmount)}`);
+      if (state.annualReturn > 0) lines.push(`예상 연 수익률: ${state.annualReturn}%`);
+      assetSummary.textContent = lines.join("  |  ");
+    }
+
+    function currentAssetStepKey() {
+      const node = assetSteps[assetStepIndex];
+      return node ? node.dataset.step : "";
+    }
+
+    function pushHistory(screenKey, stepKey) {
+      if (silentNav) return;
+      window.history.pushState({ screen: screenKey, step: stepKey }, "");
+    }
+
+    function showAssetStep(stepKey, options = {}) {
+      const idx = assetSteps.findIndex((node) => node.dataset.step === stepKey);
+      if (idx < 0) return;
+      assetStepIndex = idx;
+      assetSteps.forEach((node, i) => node.classList.toggle("active", i === assetStepIndex));
+      const activeInput = assetSteps[assetStepIndex].querySelector("input");
+      if (activeInput) setTimeout(() => activeInput.focus(), 20);
+      if (!options.skipHistory) pushHistory("assets", stepKey);
+      validateAssetsStep();
+    }
+
+    function moveAssetStep(offset = 1) {
+      const nextIndex = Math.min(assetSteps.length - 1, assetStepIndex + offset);
+      if (nextIndex !== assetStepIndex) {
+        assetStepIndex = nextIndex;
+        assetSteps.forEach((node, i) => node.classList.toggle("active", i === assetStepIndex));
+      }
+      const activeInput = assetSteps[assetStepIndex].querySelector("input");
+      if (activeInput) setTimeout(() => activeInput.focus(), 20);
+      validateAssetsStep();
+    }
+
+    function getNextAssetStepKey() {
+      if (state.cash <= 0) return "cash";
+      if (saveInput.value.trim() === "") return "save";
+      if (currentAssetStepKey() === "save") return "saveRate";
+      if (currentAssetStepKey() === "saveRate" && saveRateInput.value.trim() === "") return "saveRate";
+      if (!state.hasInvest) return "hasInvest";
+      if (state.hasInvest === "yes" && state.investAmount <= 0) return "investAmount";
+      if (state.hasInvest === "yes" && !state.hasMonthlyInvest) return "hasMonthlyInvest";
+      if (state.hasInvest === "yes" && state.hasMonthlyInvest === "yes" && state.monthlyInvestAmount <= 0) return "monthlyInvestAmount";
+      if (state.hasInvest === "yes" && currentAssetStepKey() === "monthlyInvestAmount") return "return";
+      return "done";
+    }
+
+    function advanceAssetsFlow() {
+      const next = getNextAssetStepKey();
+      if (next === "done") {
+        showScreen("loan");
+        showLoanStep("hasLoan");
+        return;
+      }
+      if (next === "return" && currentAssetStepKey() === "return") {
+        showScreen("loan");
+        showLoanStep("hasLoan");
+        return;
+      }
+      showAssetStep(next);
+    }
+
+    function retreatAssetsFlow() {
+      if (assetStepIndex > 0) {
+        showAssetStep(assetSteps[assetStepIndex - 1].dataset.step);
+      } else {
+        showScreen("landing");
+      }
+    }
+
+    function renderLoanSummary() {
+      const lines = [];
+      if (state.hasLoan === "yes") lines.push("대출 여부: 있음");
+      if (state.hasLoan === "no") lines.push("대출 여부: 없음");
+      if (state.loanType) lines.push(`대출 종류: ${state.loanType}`);
+      if (state.loanAmount > 0) lines.push(`대출 금액: ${toKoreanAmount(state.loanAmount)}`);
+      if (state.loanYears > 0) lines.push(`대출 기간: ${state.loanYears}년`);
+      if (state.loanRate >= 0 && loanRateInput.value.trim() !== "") lines.push(`대출 금리: ${state.loanRate}%`);
+      if (state.repayment) lines.push(`상환 방식: ${state.repayment}`);
+      loanSummary.textContent = lines.join("  |  ");
+    }
+
+    function currentLoanStepKey() {
+      const node = loanSteps[loanStepIndex];
+      return node ? node.dataset.loanStep : "";
+    }
+
+    function showLoanStep(stepKey, options = {}) {
+      const idx = loanSteps.findIndex((node) => node.dataset.loanStep === stepKey);
+      if (idx < 0) return;
+      loanStepIndex = idx;
+      loanSteps.forEach((node, i) => node.classList.toggle("active", i === loanStepIndex));
+      const activeInput = loanSteps[loanStepIndex].querySelector("input");
+      if (activeInput) setTimeout(() => activeInput.focus(), 20);
+      if (!options.skipHistory) pushHistory("loan", stepKey);
+      validateLoanStep();
+    }
+
+    function getNextLoanStepKey() {
+      if (!state.hasLoan) return "hasLoan";
+      if (state.hasLoan === "no") return "done";
+      if (!state.loanType) return "loanType";
+      if (state.loanAmount <= 0) return "loanType";
+      if (loanYearsInput.value.trim() === "" || state.loanYears <= 0) return "loanYears";
+      if (loanRateInput.value.trim() === "") return "loanRate";
+      if (!state.repayment) return "repayment";
+      return "done";
+    }
+
+    function advanceLoanFlow() {
+      const next = getNextLoanStepKey();
+      if (next === "done") {
+        renderResult();
+        showScreen("result");
+        return;
+      }
+      if (next === "loanType" && currentLoanStepKey() === "loanType" && state.loanType) {
+        showLoanStep("loanAmount");
+        return;
+      }
+      if (next === "loanType" && state.loanAmount <= 0) {
+        showLoanStep("loanType");
+        return;
+      }
+      if (next === currentLoanStepKey()) {
+        const fallback = {
+          hasLoan: "loanType",
+          loanType: "loanAmount",
+          loanAmount: "loanYears",
+          loanYears: "loanRate",
+          loanRate: "repayment"
+        };
+        if (state.hasLoan === "yes" && fallback[next]) {
+          showLoanStep(fallback[next]);
+          return;
+        }
+      }
+      showLoanStep(next);
+    }
+
+    function retreatLoanFlow() {
+      if (loanStepIndex > 0) {
+        showLoanStep(loanSteps[loanStepIndex - 1].dataset.loanStep);
+        return;
+      }
+      showScreen("assets");
+      const prevAssetStep = state.hasInvest === "yes" ? "return" : "hasInvest";
+      showAssetStep(prevAssetStep);
     }
 
     function formatDecimalInput(el) {
@@ -574,9 +969,10 @@
       el.value = parts.length > 1 ? `${parts[0]}.${parts.slice(1).join("")}` : parts[0];
     }
 
-    function showScreen(screenKey) {
+    function showScreen(screenKey, options = {}) {
       Object.values(screens).forEach((node) => node.classList.remove("active"));
       screens[screenKey].classList.add("active");
+      if (!options.skipHistory) pushHistory(screenKey, "");
       window.scrollTo({ top: 0, behavior: "instant" });
     }
 
@@ -586,17 +982,36 @@
         btn.classList.toggle("selected", btn.dataset.value === value);
       });
       if (group === "hasInvest") {
-        investFields.classList.toggle("hidden", value !== "yes");
         if (value === "no") {
           state.investAmount = 0;
+          state.hasMonthlyInvest = null;
+          state.monthlyInvestAmount = 0;
           state.annualReturn = 0;
           investInput.value = "";
+          monthlyInvestInput.value = "";
+          monthlyInvestKorean.textContent = "";
+          document.querySelectorAll('[data-group="hasMonthlyInvest"]').forEach((b) => b.classList.remove("selected"));
           returnInput.value = "";
+        }
+        if (value === "yes") {
+          showAssetStep("investAmount");
+        } else {
+          renderAssetSummary();
+        }
+        validateAssetsStep();
+      }
+      if (group === "hasMonthlyInvest") {
+        if (value === "no") {
+          state.monthlyInvestAmount = 0;
+          monthlyInvestInput.value = "";
+          monthlyInvestKorean.textContent = "";
+          showAssetStep("return");
+        } else {
+          showAssetStep("monthlyInvestAmount");
         }
         validateAssetsStep();
       }
       if (group === "hasLoan") {
-        loanFields.classList.toggle("hidden", value !== "yes");
         if (value === "no") {
           state.loanType = "";
           state.loanAmount = 0;
@@ -606,11 +1021,17 @@
           loanAmountInput.value = "";
           loanYearsInput.value = "";
           loanRateInput.value = "";
+          loanAmountKorean.textContent = "";
           document.querySelectorAll('[data-group="loanType"],[data-group="repayment"]').forEach((b) => b.classList.remove("selected"));
         }
+        if (value === "yes") showLoanStep("loanType");
         validateLoanStep();
       }
-      if (group === "loanType" || group === "repayment") validateLoanStep();
+      if (group === "loanType") {
+        if (state.hasLoan === "yes") showLoanStep("loanAmount");
+        validateLoanStep();
+      }
+      if (group === "repayment") validateLoanStep();
     }
 
     function bindChoices() {
@@ -622,38 +1043,69 @@
     function validateAssetsStep() {
       state.cash = parseMoney(cashInput.value);
       state.monthlySave = parseMoney(saveInput.value);
+      state.saveRate = Number(saveRateInput.value || 3.5);
       state.investAmount = parseMoney(investInput.value);
+      state.monthlyInvestAmount = parseMoney(monthlyInvestInput.value);
       state.annualReturn = Number(returnInput.value || 0);
-      let valid = state.cash > 0 && state.monthlySave >= 0 && !!state.hasInvest;
-      if (state.hasInvest === "yes") valid = valid && state.investAmount > 0;
+      cashKorean.textContent = state.cash > 0 ? toKoreanAmount(state.cash) : "";
+      saveKorean.textContent = state.monthlySave > 0 ? toKoreanAmount(state.monthlySave) : "";
+      investKorean.textContent = state.investAmount > 0 ? toKoreanAmount(state.investAmount) : "";
+      monthlyInvestKorean.textContent = state.monthlyInvestAmount > 0 ? toKoreanAmount(state.monthlyInvestAmount) : "";
+      renderAssetSummary();
+      const next = getNextAssetStepKey();
+      const atLast = currentAssetStepKey() === "return" || (state.hasInvest === "no" && currentAssetStepKey() === "hasInvest");
+      let valid = next === "done" || atLast || next !== currentAssetStepKey();
+      if (currentAssetStepKey() === "cash") valid = state.cash > 0;
+      if (currentAssetStepKey() === "save") valid = saveInput.value.trim() !== "";
+      if (currentAssetStepKey() === "saveRate") valid = true;
+      if (currentAssetStepKey() === "hasInvest") valid = !!state.hasInvest;
+      if (currentAssetStepKey() === "investAmount") valid = state.investAmount > 0;
+      if (currentAssetStepKey() === "hasMonthlyInvest") valid = state.hasMonthlyInvest === "yes" || state.hasMonthlyInvest === "no";
+      if (currentAssetStepKey() === "monthlyInvestAmount") valid = state.monthlyInvestAmount > 0;
       assetsNextBtn.disabled = !valid;
       assetsNextBtn.classList.toggle("enabled", valid);
+      assetsNextBtn.textContent = atLast || next === "done" ? "다음 단계로" : "다음";
+      assetsBackBtn.disabled = currentAssetStepKey() === "cash";
     }
 
     function validateLoanStep() {
       state.loanAmount = parseMoney(loanAmountInput.value);
       state.loanYears = Number(loanYearsInput.value || 0);
       state.loanRate = Number(loanRateInput.value || 0);
-      let valid = !!state.hasLoan;
-      if (state.hasLoan === "yes") {
-        valid = valid && !!state.loanType && state.loanAmount > 0 && state.loanYears > 0 && state.loanRate >= 0 && !!state.repayment;
-      }
+      loanAmountKorean.textContent = state.loanAmount > 0 ? toKoreanAmount(state.loanAmount) : "";
+      renderLoanSummary();
+      const current = currentLoanStepKey();
+      const next = getNextLoanStepKey();
+      const atLast = current === "repayment" || (state.hasLoan === "no" && current === "hasLoan");
+      let valid = false;
+      if (current === "hasLoan") valid = !!state.hasLoan;
+      if (current === "loanType") valid = !!state.loanType;
+      if (current === "loanAmount") valid = state.loanAmount > 0;
+      if (current === "loanYears") valid = loanYearsInput.value.trim() !== "" && state.loanYears > 0;
+      if (current === "loanRate") valid = loanRateInput.value.trim() !== "";
+      if (current === "repayment") valid = !!state.repayment;
+      if (next === "done") valid = true;
       loanNextBtn.disabled = !valid;
       loanNextBtn.classList.toggle("enabled", valid);
+      loanNextBtn.textContent = atLast || next === "done" ? "지금 결과 보러 가기" : "다음";
+      loanBackBtn.disabled = currentLoanStepKey() === "hasLoan";
     }
 
-    function computeSimulation() {
-      const months = 12;
+    function computeSimulation(years = 1, commit = true) {
+      const months = years * 12;
       const now = new Date();
       let cash = state.cash;
+      let savings = 0;
       let invest = state.investAmount;
       const hasLoan = state.hasLoan === "yes";
       const principal = hasLoan ? state.loanAmount : 0;
       let remain = principal;
       let cumulativeLoanPay = 0;
       let cumulativeSave = 0;
+      let cumulativeSaveDeposit = 0;
       const monthlyRate = (state.loanRate || 0) / 100 / 12;
-      const investMonthlyRate = (state.annualReturn || 0) / 100 / 12;
+      const investMonthlyRate = (1 + ((state.annualReturn || 0) / 100)) ** (1 / 12) - 1;
+      const saveMonthlyRate = (1 + ((state.saveRate || 3.5) / 100)) ** (1 / 12) - 1;
       const n = Math.max(1, Math.round((state.loanYears || 1) * 12));
       const annuity = hasLoan && monthlyRate > 0
         ? principal * (monthlyRate * (1 + monthlyRate) ** n) / (((1 + monthlyRate) ** n) - 1)
@@ -666,11 +1118,12 @@
         const yy = String(d.getFullYear()).slice(-2);
         const fullYear = d.getFullYear();
         const month = d.getMonth() + 1;
-        cumulativeSave += state.monthlySave;
-        cash += state.monthlySave;
+        savings = savings * (1 + saveMonthlyRate) + state.monthlySave;
+        cumulativeSaveDeposit += state.monthlySave;
+        cumulativeSave = savings;
 
         if (state.hasInvest === "yes") {
-          invest = invest * (1 + investMonthlyRate);
+          invest = (invest + state.monthlyInvestAmount) * (1 + investMonthlyRate);
         }
 
         let pay = 0;
@@ -685,138 +1138,209 @@
             remain = Math.max(0, remain - equalPrincipal);
           } else {
             const interest = remain * monthlyRate;
-            pay = m === months ? remain + interest : interest;
-            if (m === months) remain = 0;
+            pay = m === n ? remain + interest : interest;
+            if (m === n) remain = 0;
           }
           cumulativeLoanPay += pay;
           cash -= pay;
         }
 
-        const totalAsset = cash + invest;
+        const grossAsset = cash + savings + invest;
+        const totalAsset = grossAsset - remain;
         rows.push({
           month: m,
           year: fullYear,
           monthNum: month,
           shortLabel: `${yy}.${String(month).padStart(2, "0")}`,
           fullLabel: `${fullYear}년 ${month}월`,
+          grossAsset,
           totalAsset,
-          cash: Math.max(0, cash),
+          cashBase: Math.max(0, cash),
+          savings: Math.max(0, savings),
+          invest: Math.max(0, invest),
           cumulativeSave,
-          cumulativeLoanPay: Math.max(0, cumulativeLoanPay)
+          cumulativeSaveDeposit: Math.max(0, cumulativeSaveDeposit),
+          cumulativeLoanPay: Math.max(0, cumulativeLoanPay),
+          remainLoan: Math.max(0, remain)
         });
       }
-      state.monthlyRows = rows;
+      if (commit) state.monthlyRows = rows;
+      return rows;
     }
 
-    function renderChart() {
-      const data = state.monthlyRows.map((r) => r.totalAsset);
-      const min = Math.min(...data) * 0.92;
-      const max = Math.max(...data) * 1.05;
+    function renderAssetChart() {
+      const totalData = state.monthlyRows.map((r) => r.grossAsset);
+      const min = Math.min(...totalData) * 0.95;
+      const max = Math.max(...totalData) * 1.05;
       const W = 380, H = 220, padX = 18, padY = 20;
-      const x = (i) => padX + (i * (W - 2 * padX)) / (data.length - 1);
+      const x = (i) => padX + (i * (W - 2 * padX)) / Math.max(1, (totalData.length - 1));
       const y = (v) => H - padY - ((v - min) / (max - min || 1)) * (H - 2 * padY);
-      const pts = data.map((v, i) => `${x(i)},${y(v)}`).join(" ");
+      const pts = totalData.map((v, i) => `${x(i)},${y(v)}`).join(" ");
 
-      lineChart.innerHTML = `
+      assetLineChart.innerHTML = `
         <line x1="18" y1="180" x2="362" y2="180" stroke="#ececf0" stroke-width="1.2" />
         <line x1="18" y1="130" x2="362" y2="130" stroke="#f2f2f5" stroke-width="1" />
         <line x1="18" y1="80" x2="362" y2="80" stroke="#f2f2f5" stroke-width="1" />
-        <polyline points="${pts}" fill="none" stroke="#7d68ff" stroke-width="3.2" />
+        <polyline points="${pts}" fill="none" stroke="#635bff" stroke-width="3.4" />
         <line id="hoverLine" x1="0" y1="20" x2="0" y2="200" stroke="#b9c5ff" stroke-width="1.2" stroke-dasharray="4 4" opacity="0" />
-        <circle id="hoverDot" cx="${x(0)}" cy="${y(data[0])}" r="5.5" fill="#fff" stroke="#70d5d5" stroke-width="2.5" opacity="0" />
+        <circle id="hoverDot" cx="${x(0)}" cy="${y(totalData[0])}" r="5.5" fill="#fff" stroke="#635bff" stroke-width="2.5" opacity="0" />
       `;
-      const hoverLine = lineChart.querySelector("#hoverLine");
-      const hoverDot = lineChart.querySelector("#hoverDot");
+      const hoverLine = assetLineChart.querySelector("#hoverLine");
+      const hoverDot = assetLineChart.querySelector("#hoverDot");
       const toIndex = (clientX) => {
-        const chartBox = lineChart.getBoundingClientRect();
+        const chartBox = assetLineChart.getBoundingClientRect();
         const ratio = Math.min(1, Math.max(0, (clientX - chartBox.left) / chartBox.width));
-        return Math.round(ratio * (data.length - 1));
+        return Math.round(ratio * (totalData.length - 1));
       };
       const showTooltip = (idx, clientX, clientY) => {
-        const chartBox = lineChart.getBoundingClientRect();
+        const chartBox = assetLineChart.getBoundingClientRect();
         const row = state.monthlyRows[idx];
         const px = x(idx);
-        const py = y(data[idx]);
+        const py = y(totalData[idx]);
         hoverLine.setAttribute("x1", px);
         hoverLine.setAttribute("x2", px);
         hoverLine.setAttribute("opacity", "1");
         hoverDot.setAttribute("cx", px);
         hoverDot.setAttribute("cy", py);
         hoverDot.setAttribute("opacity", "1");
-        chartTooltip.innerHTML = `
+        assetChartTooltip.innerHTML = `
           <div class="title">${row.fullLabel}</div>
-          <div>보유 현금 자산: ${money(row.cash)}</div>
-          <div>누적 대출 상환: ${money(row.cumulativeLoanPay)}</div>
-          <div>누적 저축 금액: ${money(row.cumulativeSave)}</div>
+          <div>총 자산: ${money(row.grossAsset)}</div>
+          <div>저축 자산: ${money(row.savings + row.cashBase)}</div>
+          <div>투자 자산: ${money(row.invest)}</div>
         `;
-        chartTooltip.style.left = `${clientX - chartBox.left}px`;
-        chartTooltip.style.top = `${clientY - chartBox.top}px`;
-        chartTooltip.classList.add("visible");
+        assetChartTooltip.style.left = `${clientX - chartBox.left}px`;
+        assetChartTooltip.style.top = `${clientY - chartBox.top}px`;
+        assetChartTooltip.classList.add("visible");
       };
       const hideTooltip = () => {
         hoverLine.setAttribute("opacity", "0");
         hoverDot.setAttribute("opacity", "0");
-        chartTooltip.classList.remove("visible");
+        assetChartTooltip.classList.remove("visible");
       };
-      lineChart.onmousemove = (e) => showTooltip(toIndex(e.clientX), e.clientX, e.clientY);
-      lineChart.onmouseleave = hideTooltip;
-      lineChart.ontouchmove = (e) => {
+      assetLineChart.onmousemove = (e) => showTooltip(toIndex(e.clientX), e.clientX, e.clientY);
+      assetLineChart.onmouseleave = hideTooltip;
+      assetLineChart.ontouchmove = (e) => {
         const t = e.touches[0];
         showTooltip(toIndex(t.clientX), t.clientX, t.clientY);
       };
-      lineChart.ontouchend = hideTooltip;
+      assetLineChart.ontouchend = hideTooltip;
 
-      chartMonths.innerHTML = state.monthlyRows
-        .filter((_, idx, arr) => idx % 2 === 0 || idx === arr.length - 1)
-        .map((r) => `<span>${r.shortLabel}</span>`)
+      assetChartMonths.innerHTML = state.monthlyRows
+        .filter((r) => r.monthNum === 1 || r.month === state.monthlyRows.length)
+        .map((r) => `<span>${r.year}</span>`)
+        .join("");
+    }
+
+    function renderLoanChart() {
+      const loanData = state.monthlyRows.map((r) => r.remainLoan);
+      const min = Math.min(...loanData) * 0.95;
+      const max = Math.max(...loanData) * 1.05;
+      const W = 380, H = 220, padX = 18, padY = 20;
+      const x = (i) => padX + (i * (W - 2 * padX)) / Math.max(1, (loanData.length - 1));
+      const y = (v) => H - padY - ((v - min) / (max - min || 1)) * (H - 2 * padY);
+      const pts = loanData.map((v, i) => `${x(i)},${y(v)}`).join(" ");
+
+      loanLineChart.innerHTML = `
+        <line x1="18" y1="180" x2="362" y2="180" stroke="#ececf0" stroke-width="1.2" />
+        <line x1="18" y1="130" x2="362" y2="130" stroke="#f2f2f5" stroke-width="1" />
+        <line x1="18" y1="80" x2="362" y2="80" stroke="#f2f2f5" stroke-width="1" />
+        <polyline points="${pts}" fill="none" stroke="#d65955" stroke-width="3.4" />
+        <line id="hoverLine" x1="0" y1="20" x2="0" y2="200" stroke="#f1b0ac" stroke-width="1.2" stroke-dasharray="4 4" opacity="0" />
+        <circle id="hoverDot" cx="${x(0)}" cy="${y(loanData[0])}" r="5.5" fill="#fff" stroke="#d65955" stroke-width="2.5" opacity="0" />
+      `;
+      const hoverLine = loanLineChart.querySelector("#hoverLine");
+      const hoverDot = loanLineChart.querySelector("#hoverDot");
+      const toIndex = (clientX) => {
+        const chartBox = loanLineChart.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (clientX - chartBox.left) / chartBox.width));
+        return Math.round(ratio * (loanData.length - 1));
+      };
+      const showTooltip = (idx, clientX, clientY) => {
+        const chartBox = loanLineChart.getBoundingClientRect();
+        const row = state.monthlyRows[idx];
+        const px = x(idx);
+        const py = y(loanData[idx]);
+        hoverLine.setAttribute("x1", px);
+        hoverLine.setAttribute("x2", px);
+        hoverLine.setAttribute("opacity", "1");
+        hoverDot.setAttribute("cx", px);
+        hoverDot.setAttribute("cy", py);
+        hoverDot.setAttribute("opacity", "1");
+        loanChartTooltip.innerHTML = `
+          <div class="title">${row.fullLabel}</div>
+          <div>대출 잔액: ${money(row.remainLoan)}</div>
+        `;
+        loanChartTooltip.style.left = `${clientX - chartBox.left}px`;
+        loanChartTooltip.style.top = `${clientY - chartBox.top}px`;
+        loanChartTooltip.classList.add("visible");
+      };
+      const hideTooltip = () => {
+        hoverLine.setAttribute("opacity", "0");
+        hoverDot.setAttribute("opacity", "0");
+        loanChartTooltip.classList.remove("visible");
+      };
+      loanLineChart.onmousemove = (e) => showTooltip(toIndex(e.clientX), e.clientX, e.clientY);
+      loanLineChart.onmouseleave = hideTooltip;
+      loanLineChart.ontouchmove = (e) => {
+        const t = e.touches[0];
+        showTooltip(toIndex(t.clientX), t.clientX, t.clientY);
+      };
+      loanLineChart.ontouchend = hideTooltip;
+      loanChartMonths.innerHTML = state.monthlyRows
+        .filter((r) => r.monthNum === 1 || r.month === state.monthlyRows.length)
+        .map((r) => `<span>${r.year}</span>`)
         .join("");
     }
 
     function renderMonthCards() {
+      const oneYearRows = computeSimulation(1, false);
       monthCards.innerHTML = "";
-      state.monthlyRows.forEach((row, idx) => {
+      oneYearRows.forEach((row, idx) => {
         const card = document.createElement("div");
         card.className = "month-card";
-        const totalSeg = row.cash + row.cumulativeLoanPay + row.cumulativeSave || 1;
-        const cashW = (row.cash / totalSeg) * 100;
+        const totalSeg = row.savings + row.invest + row.cumulativeLoanPay || 1;
+        const saveW = ((row.savings + row.cashBase) / totalSeg) * 100;
+        const investW = (row.invest / totalSeg) * 100;
         const loanW = (row.cumulativeLoanPay / totalSeg) * 100;
-        const saveW = (row.cumulativeSave / totalSeg) * 100;
-        const monthText = row.fullLabel;
         const expanded = idx === 0;
         card.innerHTML = `
           <div class="month-head">
-            <span>${monthText}</span>
-            <span class="value">${Math.round(row.totalAsset / 10000).toLocaleString("ko-KR")}만 원 ${expanded ? "⌃" : "⌄"}</span>
+            <span>${row.fullLabel}</span>
+            <span class="value">${Math.round(row.grossAsset / 10000).toLocaleString("ko-KR")}만 원 ${expanded ? "⌃" : "⌄"}</span>
           </div>
           <div class="bar">
-            <span class="seg-cash" style="width:${cashW}%;"></span>
-            <span class="seg-loan" style="width:${loanW}%;"></span>
             <span class="seg-save" style="width:${saveW}%;"></span>
+            <span class="seg-cash" style="width:${investW}%;"></span>
+            <span class="seg-loan" style="width:${loanW}%;"></span>
           </div>
           <div class="legend ${expanded ? "visible" : ""}">
-            <div class="legend-item"><span><i class="dot" style="background:#7b2fbd;"></i>보유 현금 자산</span><strong>${Math.round(row.cash / 10000).toLocaleString("ko-KR")}만 원</strong></div>
+            <div class="legend-item"><span><i class="dot" style="background:#4ac6cf;"></i>저축 자산</span><strong>${Math.round((row.savings + row.cashBase) / 10000).toLocaleString("ko-KR")}만 원</strong></div>
+            <div class="legend-item"><span><i class="dot" style="background:#7b2fbd;"></i>투자 자산</span><strong>${Math.round(row.invest / 10000).toLocaleString("ko-KR")}만 원</strong></div>
             <div class="legend-item"><span><i class="dot" style="background:#d65955;"></i>누적 대출 상환</span><strong>${Math.round(row.cumulativeLoanPay / 10000).toLocaleString("ko-KR")}만 원</strong></div>
-            <div class="legend-item"><span><i class="dot" style="background:#4ac6cf;"></i>누적 저축 금액</span><strong>${Math.round(row.cumulativeSave / 10000).toLocaleString("ko-KR")}만 원</strong></div>
           </div>
         `;
         card.addEventListener("click", () => {
           const legend = card.querySelector(".legend");
           legend.classList.toggle("visible");
           const valueEl = card.querySelector(".value");
-          valueEl.textContent = `${Math.round(row.totalAsset / 10000).toLocaleString("ko-KR")}만 원 ${legend.classList.contains("visible") ? "⌃" : "⌄"}`;
+          valueEl.textContent = `${Math.round(row.grossAsset / 10000).toLocaleString("ko-KR")}만 원 ${legend.classList.contains("visible") ? "⌃" : "⌄"}`;
         });
         monthCards.appendChild(card);
       });
     }
 
     function renderResult() {
-      computeSimulation();
+      const rows = computeSimulation(activeHorizonYears);
       const first = state.cash + state.investAmount;
-      const last = state.monthlyRows[state.monthlyRows.length - 1].totalAsset;
+      const last = rows[rows.length - 1].grossAsset;
       const gain = last - first;
+      summaryHorizon.textContent = `내 자산이 이만큼 늘었어요`;
       summaryTotal.textContent = `${Math.round(last).toLocaleString("ko-KR")}원 예상`;
       summaryGain.textContent = `(${gain >= 0 ? "+" : ""}${Math.round(gain).toLocaleString("ko-KR")}원 증가 예상)`;
-      renderChart();
+      summarySentence.textContent = `매달 ${toKoreanAmount(state.monthlySave)} 저축하면 ${activeHorizonYears}년 뒤 약 ${toKoreanAmount(last)}이 됩니다.`;
+      renderAssetChart();
+      renderLoanChart();
       renderMonthCards();
     }
 
@@ -825,13 +1349,29 @@
         el.addEventListener("input", () => {
           formatMoneyInput(el);
           validateAssetsStep();
+          validateLoanStep();
+        });
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (el.closest("#screen-assets")) advanceAssetsFlow();
+            if (el.closest("#screen-loan")) advanceLoanFlow();
+          }
         });
       });
       document.querySelectorAll(".decimal").forEach((el) => {
         el.addEventListener("input", () => {
           formatDecimalInput(el);
+          if (el === saveRateInput && el.value.trim() === "") state.saveRate = 3.5;
           validateAssetsStep();
           validateLoanStep();
+        });
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (el.closest("#screen-assets")) advanceAssetsFlow();
+            if (el.closest("#screen-loan")) advanceLoanFlow();
+          }
         });
       });
       document.querySelectorAll(".input-line-wrap").forEach((wrap) => {
@@ -842,16 +1382,27 @@
     }
 
     function startFlow() {
-      showScreen("assets");
+      showScreen("assets", { skipHistory: true });
+      showAssetStep("cash", { skipHistory: true });
+      pushHistory("assets", "cash");
+    }
+
+    function bindResultTabs() {
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeHorizonYears = Number(btn.dataset.years || 1);
+          tabButtons.forEach((b) => b.classList.toggle("active", b === btn));
+          renderResult();
+        });
+      });
     }
 
     document.getElementById("startBtn").addEventListener("click", startFlow);
     document.getElementById("topStartBtn").addEventListener("click", startFlow);
-    assetsNextBtn.addEventListener("click", () => showScreen("loan"));
-    loanNextBtn.addEventListener("click", () => {
-      renderResult();
-      showScreen("result");
-    });
+    assetsBackBtn.addEventListener("click", retreatAssetsFlow);
+    assetsNextBtn.addEventListener("click", advanceAssetsFlow);
+    loanBackBtn.addEventListener("click", retreatLoanFlow);
+    loanNextBtn.addEventListener("click", advanceLoanFlow);
     document.getElementById("restartBtn").addEventListener("click", () => location.reload());
     document.getElementById("shareBtn").addEventListener("click", async () => {
       const text = `${summaryTotal.textContent}\n${summaryGain.textContent}`;
@@ -867,6 +1418,24 @@
 
     bindInputs();
     bindChoices();
+    bindResultTabs();
+    window.history.replaceState({ screen: "landing", step: "" }, "");
+    window.addEventListener("popstate", (e) => {
+      const data = e.state || { screen: "landing", step: "" };
+      silentNav = true;
+      if (data.screen === "assets") {
+        showScreen("assets", { skipHistory: true });
+        showAssetStep(data.step || "cash", { skipHistory: true });
+      } else if (data.screen === "loan") {
+        showScreen("loan", { skipHistory: true });
+        showLoanStep(data.step || "hasLoan", { skipHistory: true });
+      } else if (data.screen === "result") {
+        showScreen("result", { skipHistory: true });
+      } else {
+        showScreen("landing", { skipHistory: true });
+      }
+      silentNav = false;
+    });
   </script>
 </body>
 </html>
