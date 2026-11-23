@@ -294,3 +294,17 @@ h3 { font-size: 17px; margin: 0 0 4px; letter-spacing: -0.3px; }
 .chart-table th, .chart-table td { padding: 6px 4px; border-bottom: 1px solid var(--line); text-align: right; }
 .chart-table th[scope="row"], .chart-table thead th:first-child { text-align: left; }
 .chart-table thead th { color: var(--sub); font-weight: 700; position: sticky; top: 0; background: var(--card); }
+
+/* 동작 버튼 */
+.actions { margin: 4px 0 16px; }
+.actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.save-note { font-size: 12px; color: var(--muted); text-align: center; margin: 10px 0 0; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  background: var(--text); color: var(--bg);
+  padding: 10px 16px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; z-index: 50;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}

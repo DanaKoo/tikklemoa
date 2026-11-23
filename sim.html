@@ -144,8 +144,19 @@
           </div>
         </details>
       </div>
+
+      <div class="actions">
+        <button type="button" class="btn primary block" id="shareBtn">결과 공유하기</button>
+        <div class="actions-row">
+          <button type="button" class="btn secondary" id="editBtn">입력 수정</button>
+          <button type="button" class="btn secondary" id="resetBtn">입력 초기화</button>
+        </div>
+        <p class="save-note" id="saveNote">입력값은 이 브라우저에만 저장되고 서버로 보내지 않아요.</p>
+      </div>
     </section>
   </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
   <script type="module" src="js/main.js"></script>
 </body>

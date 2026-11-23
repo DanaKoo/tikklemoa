@@ -125,7 +125,7 @@ function onSubmit(e) {
 }
 
 // 다른 모듈(그래프, 도면, 저장, 트래킹)이 붙는 지점
-export const hooks = { onRender: [], onSubmit: [], onInput: [] };
+export const hooks = { onRender: [], onSubmit: [], onInput: [], onShare: [] };
 
 export function getState() { return state; }
 export function setFieldValues(raw) {
@@ -136,6 +136,39 @@ export function setFieldValues(raw) {
   updatePresetChip();
 }
 export { readRaw, refresh, render };
+
+/** 입력 초기화: 필드 비우기(목표 금액은 59㎡ 예시값), 결과 숨기기 */
+export function resetAll() {
+  for (const id of Object.values(FIELDS)) $(id).value = "";
+  $("inT").value = String(PRESET_59_T);
+  state.submitted = false;
+  state.submittedAttempt = false;
+  state.touched.clear();
+  state.values = null;
+  showErrors({}, false);
+  updateKoreanHints();
+  updatePresetChip();
+  $("resultSection").hidden = true;
+}
+
+/** 저장된 값으로 복원. submitted였고 유효하면 결과까지 보여 준다 */
+export function restore(raw, submitted) {
+  setFieldValues(raw);
+  const { ok, values } = validateInputs(readRaw());
+  if (submitted && ok) {
+    state.submitted = true;
+    state.values = values;
+    render(values);
+  }
+}
+
+export function toast(msg) {
+  const el = $("toast");
+  el.textContent = msg;
+  el.hidden = false;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { el.hidden = true; }, 2400);
+}
 
 export function init() {
   if (!$("inT").value) $("inT").value = String(PRESET_59_T);
