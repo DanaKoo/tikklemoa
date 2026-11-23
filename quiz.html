@@ -309,6 +309,8 @@ function calcStats(type) {
 document.querySelectorAll("#income-options .opt-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     income = Number(btn.dataset.income);
+    // 첫 질문(소득)에 답한 순간 = 퀴즈 시작
+    if (window.tm) window.tm.track("quiz_start");
     qIndex = 0;
     answers = [];
     selected = null;
@@ -354,8 +356,10 @@ document.getElementById("nextBtn").addEventListener("click", () => {
     renderQuestion();
   } else {
     resultType = calcType(answers);
+    if (window.tm) window.tm.setQuizType(resultType);
     renderResult();
     showScreen("s-result");
+    if (window.tm) window.tm.track("quiz_complete", { quiz_type: resultType });
   }
 });
 
@@ -385,10 +389,10 @@ function renderResult() {
   document.getElementById("tip-box").style.borderLeftColor = t.accent;
   document.getElementById("tip-text").textContent = t.tip;
 
-  // 시뮬레이터 연결 버튼: 월 저축 추천값 = 소득 × 20%
-  const monthlySave = Math.round(income * 10000 * 0.2);
+  // 시뮬레이터 연결 버튼: 월 적립액 기본값 = 소득 × 20% (만 원)
+  const monthlySave = Math.round(income * 0.2);
   document.getElementById("simBtn").onclick = () => {
-    window.location.href = `index.html?income=${income}&save=${monthlySave}&type=${resultType}`;
+    window.location.href = `sim.html?from=quiz&type=${resultType}&save=${monthlySave}`;
   };
 }
 
@@ -414,6 +418,12 @@ document.getElementById("retryBtn").addEventListener("click", () => {
   qIndex = 0; answers = []; selected = null; resultType = null;
   showScreen("s-landing");
 });
+</script>
+<script type="module">
+  import { track, setQuizType } from "./js/track.js";
+  window.tm = { track, setQuizType };
+  // 퀴즈 랜딩 화면 노출
+  if (document.getElementById("s-landing").classList.contains("active")) track("quiz_landing_view");
 </script>
 </body>
 </html>
