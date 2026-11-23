@@ -113,9 +113,9 @@ export function validateInputs(raw) {
   const isBlank = (s) => s === undefined || s === null || String(s).trim() === "";
 
   const check = (key, label, rule) => {
-    if (isBlank(raw[key])) { errors[key] = `${label}을(를) 입력해 주세요.`; return; }
+    if (isBlank(raw[key])) { errors[key] = `${label}을 입력해 주세요.`; return; }
     const v = num(raw[key]);
-    if (Number.isNaN(v)) { errors[key] = `${label}은(는) 숫자로만 입력해 주세요.`; return; }
+    if (Number.isNaN(v)) { errors[key] = `${label}은 숫자로만 입력해 주세요.`; return; }
     const msg = rule(v);
     if (msg) errors[key] = msg; else values[key] = v;
   };

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <title>티끌모아 - 내 집 59㎡ 채우기</title>
+  <meta name="description" content="현재 자산과 월 적립액으로 목표 금액까지 얼마나 걸리는지 계산하고, 59㎡ 도면을 채워 보세요." />
+  <link rel="stylesheet" href="css/sim.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="logo" href="quiz.html">티끌모아</a>
+    </header>
+
+    <div id="storageNotice" class="notice" role="status" hidden>
+      이 브라우저에서는 저장소를 쓸 수 없어 입력값이 저장되지 않아요. 페이지를 닫으면 다시 입력해야 해요.
+    </div>
+
+    <!-- 입력 화면 -->
+    <section id="inputSection" class="card" aria-labelledby="inputTitle">
+      <h1 id="inputTitle" class="title">목표까지 얼마나 걸릴까?</h1>
+      <p class="sub">금액은 모두 <strong>만 원</strong> 단위로 입력해 주세요.</p>
+
+      <form id="simForm" novalidate>
+        <div class="field">
+          <label for="inA">현재 자산</label>
+          <div class="input-wrap">
+            <input id="inA" name="A" type="text" inputmode="numeric" autocomplete="off" placeholder="예: 3000" aria-describedby="hintA errA" />
+            <span class="unit">만 원</span>
+          </div>
+          <div class="hint" id="hintA" data-korean-for="inA"></div>
+          <div class="error" id="errA" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="inP">월 적립액</label>
+          <div class="input-wrap">
+            <input id="inP" name="P" type="text" inputmode="numeric" autocomplete="off" placeholder="예: 100" aria-describedby="hintP errP" />
+            <span class="unit">만 원</span>
+          </div>
+          <div class="hint" id="hintP" data-korean-for="inP"></div>
+          <div class="error" id="errP" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="inRa">연 수익률</label>
+          <div class="input-wrap">
+            <input id="inRa" name="ra" type="text" inputmode="decimal" autocomplete="off" placeholder="예: 4" aria-describedby="hintRa errRa" />
+            <span class="unit">%</span>
+          </div>
+          <div class="hint" id="hintRa">0%에서 30% 사이. 예금·적금만 한다면 3% 안팎이에요.</div>
+          <div class="error" id="errRa" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <span class="label" id="lblT">목표 금액</span>
+          <div class="chips" role="group" aria-labelledby="lblT">
+            <button type="button" class="chip" id="preset59" aria-pressed="true">59㎡</button>
+          </div>
+          <div class="input-wrap">
+            <input id="inT" name="T" type="text" inputmode="numeric" autocomplete="off" aria-labelledby="lblT" aria-describedby="hintT errT" />
+            <span class="unit">만 원</span>
+          </div>
+          <div class="hint" id="hintT"><span data-korean-for="inT"></span> <span class="preset-note" id="presetNote">예시값이에요. 내 목표 금액으로 바꿔 주세요.</span></div>
+          <div class="error" id="errT" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="inN">목표 기간 <span class="optional">(선택)</span></label>
+          <div class="input-wrap">
+            <input id="inN" name="N" type="text" inputmode="numeric" autocomplete="off" placeholder="비워 둬도 돼요" aria-describedby="hintN errN" />
+            <span class="unit">년</span>
+          </div>
+          <div class="hint" id="hintN">입력하면 이 기간 안에 모으려면 매달 얼마가 필요한지 알려 드려요.</div>
+          <div class="error" id="errN" role="alert"></div>
+        </div>
+
+        <button type="submit" class="btn primary block" id="submitBtn">결과 보기</button>
+      </form>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section id="resultSection" class="result" aria-labelledby="resultTitle" hidden>
+      <h2 id="resultTitle" class="title">내 계산 결과</h2>
+
+      <p class="disclaimer" id="disclaimer">입력한 값 기준의 계산이며 예측이나 투자 권유가 아닙니다.</p>
+
+      <div class="tiles">
+        <div class="tile">
+          <div class="tile-label">달성 예상 시점</div>
+          <div class="tile-value" id="tileAchieve">-</div>
+          <div class="tile-sub" id="tileAchieveSub"></div>
+        </div>
+        <div class="tile">
+          <div class="tile-label">3년 뒤 예상 자산</div>
+          <div class="tile-value" id="tile3y">-</div>
+        </div>
+        <div class="tile" id="tileRequiredWrap" hidden>
+          <div class="tile-label" id="tileRequiredLabel">필요 월 적립액</div>
+          <div class="tile-value" id="tileRequired">-</div>
+          <div class="tile-sub" id="tileRequiredSub"></div>
+        </div>
+      </div>
+
+      <p class="report-line" id="reportLine"></p>
+    </section>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
