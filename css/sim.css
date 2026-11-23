@@ -308,3 +308,20 @@ h3 { font-size: 17px; margin: 0 0 4px; letter-spacing: -0.3px; }
   font-size: 14px; font-weight: 600; z-index: 50;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
+
+/* 리포트 가입 */
+.subscribe .input-wrap input { padding-right: 14px; font-size: 16px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.consent { margin: 4px 0 12px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; padding: 8px 0; cursor: pointer; }
+.check input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; accent-color: var(--accent); }
+.consent-detail { margin: -2px 0 4px 30px; font-size: 13px; color: var(--sub); }
+.consent-detail summary { cursor: pointer; color: var(--accent-soft-ink); font-weight: 600; padding: 2px 0; }
+.consent-detail dl { margin: 6px 0; }
+.consent-detail dt { font-weight: 700; color: var(--text); margin-top: 6px; }
+.consent-detail dd { margin: 0; }
+.consent-detail a { color: var(--accent-soft-ink); }
+.send-note { font-size: 13px; color: var(--sub); background: var(--input-bg); border-radius: 10px; padding: 10px 12px; margin: 0 0 12px; }
+.sub-status { margin-top: 10px; font-size: 14px; font-weight: 600; border-radius: 10px; padding: 10px 12px; }
+.sub-status.ok { color: var(--success); background: var(--input-bg); }
+.sub-status.fail { color: var(--danger); background: var(--input-bg); }

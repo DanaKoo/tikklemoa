@@ -4,6 +4,8 @@ import { initTimeline, renderTimeline } from "./timeline.js";
 import { storageAvailable, loadSimInputs, saveSimInputs, clearSimInputs } from "./storage.js";
 import { share } from "./share.js";
 import { track, getVariant, markInputComplete, maybeTrackReturnVisit } from "./track.js";
+import { initSubscribe } from "./subscribe.js";
+import { validateInputs } from "./calc.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -54,6 +56,15 @@ hooks.onSubmit.push((_values, { first }) => {
   markInputComplete();
 });
 hooks.onShare.push((res) => track("report_share", { method: res.method }));
+
+// ── 월 1회 리포트 가입 ──────────────────────────────
+initSubscribe({
+  getValues: () => {
+    const v = validateInputs(readRaw());
+    return v.ok ? v.values : null;
+  },
+  onSuccess: (status) => track("report_subscribe", { status }),
+});
 
 // 유입용 파라미터는 기억했으니 주소창에서 지운다(공유·북마크 시 섞이지 않게). QA용 ab, debug는 남긴다
 if (["from", "type", "save", "ref", "utm_source"].some((k) => params.has(k))) {
