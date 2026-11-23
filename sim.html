@@ -105,6 +105,45 @@
       </div>
 
       <p class="report-line" id="reportLine"></p>
+
+      <!-- 시점 슬라이더: 도면, 그래프 표시, 자산 숫자, 채움 퍼센트를 함께 움직인다 -->
+      <div class="card timeline" id="timelineCard">
+        <div class="tl-head">
+          <span class="tl-when" id="tlWhen">지금</span>
+          <span class="tl-date" id="tlDate"></span>
+        </div>
+        <div class="tl-amount" id="tlAmount">-</div>
+        <div class="tl-progress">목표 대비 <b id="tlPercent">0%</b></div>
+        <label for="timeSlider" class="sr-only">시점 선택</label>
+        <input type="range" id="timeSlider" min="0" max="12" step="1" value="0" />
+        <div class="tl-scale"><span>지금</span><span id="tlMaxLabel"></span></div>
+      </div>
+
+      <div class="card" id="planCard">
+        <h3>59㎡ 채우기</h3>
+        <p class="sub">모은 돈이 목표 금액에 가까워질수록 도면이 차올라요.</p>
+        <div id="planBox" class="plan-box"></div>
+        <div class="plan-caption"><b id="planPercent">0%</b> 채웠어요</div>
+      </div>
+
+      <div class="card" id="chartCard">
+        <h3>자산 성장 그래프</h3>
+        <ul class="legend" aria-label="범례">
+          <li><i class="lg lg-wealth"></i>수익 포함 자산</li>
+          <li><i class="lg lg-principal"></i>원금 누적</li>
+          <li><i class="lg lg-target"></i>목표 금액</li>
+        </ul>
+        <div class="chart-box"></div>
+        <details class="chart-table-wrap">
+          <summary>표로 보기</summary>
+          <div class="table-scroll">
+            <table class="chart-table">
+              <thead><tr><th scope="col">시점</th><th scope="col">원금 누적</th><th scope="col">수익 포함 자산</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </details>
+      </div>
     </section>
   </div>
 

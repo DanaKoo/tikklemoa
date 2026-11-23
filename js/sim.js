@@ -79,6 +79,7 @@ function renderSummary(values) {
   } else {
     reqWrap.hidden = true;
   }
+  document.querySelector(".tiles").classList.toggle("single-row", !values.N);
 
   $("reportLine").innerHTML =
     `지금 속도를 유지하면 3년 뒤 예상 자산은 <strong>${formatManwon(in3y)}</strong>입니다.`;
